@@ -8,9 +8,7 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserInput: CreateUserInput) {
-    const checkExistUser = await this.prismaService.user.findUnique({
-      where: { email: createUserInput.email },
-    });
+    const checkExistUser = this.findOne(createUserInput.email);
 
     if (checkExistUser) {
       throw new Error('User already exist');
@@ -24,19 +22,50 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return this.prismaService.user.findMany();
+  async findAll() {
+    return await this.prismaService.user.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id?: string, email?: string) {
+    // find user by id or email
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+        email: email,
+      },
+    });
+
+    return user;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  update(updateUserInput: UpdateUserInput) {
+    const user = this.findOne(updateUserInput.id);
+
+    if (!user) {
+      throw new Error('User not found');
+    } else {
+      return this.prismaService.user.update({
+        where: {
+          id: updateUserInput.id,
+        },
+        data: {
+          ...updateUserInput,
+        },
+      });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    const user = this.findOne(id);
+
+    if (!user) {
+      throw new Error('User not found');
+    } else {
+      return this.prismaService.user.delete({
+        where: {
+          id: id,
+        },
+      });
+    }
   }
 }

@@ -20,12 +20,15 @@ type Mutation {
 }
 
 type Query {
-  user(id: Int!): UserEntity!
+  """Find user by id or email"""
+  user(id: String!): UserEntity!
+
+  """Get all users"""
   users: [UserEntity!]!
 }
 
 input UpdateUserInput {
-  id: Int!
+  id: String!
 }
 
 type UserEntity {
