@@ -1,0 +1,58 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  """User's email"""
+  email: String!
+
+  """User's name"""
+  name: String!
+
+  """User's password"""
+  password: String!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): UserEntity!
+  removeUser(id: Int!): UserEntity!
+  updateUser(updateUserInput: UpdateUserInput!): UserEntity!
+}
+
+type Query {
+  user(id: Int!): UserEntity!
+  users: [UserEntity!]!
+}
+
+input UpdateUserInput {
+  id: Int!
+}
+
+type UserEntity {
+  """User's createdAt"""
+  createdAt: String!
+
+  """User's email"""
+  email: String!
+
+  """User's ID"""
+  id: String!
+
+  """User's name"""
+  name: String!
+
+  """User's password"""
+  password: String!
+
+  """User's role"""
+  role: UserRole!
+
+  """User's updatedAt"""
+  updatedAt: String!
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  USER
+}
