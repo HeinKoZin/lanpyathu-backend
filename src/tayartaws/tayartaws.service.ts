@@ -60,4 +60,13 @@ export class TayartawsService {
       });
     }
   }
+
+  async findAllBySayartawID(sayartawID: string) {
+    const tayartaws = await this.prismaService.tayartaw.findMany({
+      where: {
+        sayartawId: sayartawID,
+      },
+    });
+    return tayartaws;
+  }
 }

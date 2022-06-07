@@ -8,6 +8,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { join } from 'path';
 import { TayartawsModule } from './tayartaws/tayartaws.module';
+import { SayartawsModule } from './sayartaws/sayartaws.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TayartawsModule } from './tayartaws/tayartaws.module';
     PrismaModule,
     UsersModule,
     TayartawsModule,
+    SayartawsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
