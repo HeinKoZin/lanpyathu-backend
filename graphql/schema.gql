@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateSayartawInput {
+  """Sayartaw bio"""
+  bio: String!
+
+  """Sayartaw cover"""
+  cover: String!
+
+  """Sayartaw name"""
+  name: String!
+}
+
 input CreateTayartawInput {
   """Tayartaw Cover"""
   cover: String!
@@ -29,15 +40,20 @@ input CreateUserInput {
 }
 
 type Mutation {
+  createSayartaw(createSayartawInput: CreateSayartawInput!): SayartawEntity!
   createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!
+  removeSayartaw(id: String!): SayartawEntity!
   removeTayartaw(id: String!): TayartawEntity!
   removeUser(id: Int!): UserEntity!
+  updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
 }
 
 type Query {
+  sayartaw(id: String!): SayartawEntity!
+  sayartaws: [SayartawEntity!]!
   tayartaw(id: Int!): TayartawEntity!
   tayartaws: [TayartawEntity!]!
 
@@ -46,6 +62,27 @@ type Query {
 
   """Get all users"""
   users: [UserEntity!]!
+}
+
+type SayartawEntity {
+  """Sayartaw bio"""
+  bio: String!
+
+  """Sayartaw cover"""
+  cover: String!
+
+  """Sayartaw createdAt"""
+  createdAt: String!
+
+  """Sayartaw ID"""
+  id: String!
+
+  """Sayartaw name"""
+  name: String!
+  tayartaws: [TayartawEntity!]!
+
+  """Sayartaw updatedAt"""
+  updatedAt: String!
 }
 
 type TayartawEntity {
@@ -63,6 +100,7 @@ type TayartawEntity {
 
   """Tayartaw Path"""
   path: String!
+  sayartaw: SayartawEntity!
 
   """Sayartaw ID"""
   sayartawId: String!
@@ -72,6 +110,18 @@ type TayartawEntity {
 
   """Tayartaw UpdatedAt"""
   updatedAt: String!
+}
+
+input UpdateSayartawInput {
+  """Sayartaw bio"""
+  bio: String
+
+  """Sayartaw cover"""
+  cover: String
+  id: String!
+
+  """Sayartaw name"""
+  name: String
 }
 
 input UpdateTayartawInput {

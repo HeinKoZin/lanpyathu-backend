@@ -1,12 +1,27 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { TayartawsService } from './tayartaws.service';
 import { CreateTayartawInput } from './dto/create-tayartaw.input';
 import { UpdateTayartawInput } from './dto/update-tayartaw.input';
 import { TayartawEntity } from './entities/tayartaw.entity';
+import { SayartawEntity } from 'src/sayartaws/entities/sayartaw.entity';
+import { SayartawsService } from 'src/sayartaws/sayartaws.service';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => TayartawEntity)
 export class TayartawsResolver {
-  constructor(private readonly tayartawsService: TayartawsService) {}
+  constructor(
+    private readonly tayartawsService: TayartawsService,
+    @Inject(forwardRef(() => SayartawsService))
+    private readonly sayartawSerivce: SayartawsService,
+  ) {}
 
   @Mutation(() => TayartawEntity)
   createTayartaw(
@@ -35,5 +50,10 @@ export class TayartawsResolver {
   @Mutation(() => TayartawEntity)
   removeTayartaw(@Args('id', { type: () => String }) id: string) {
     return this.tayartawsService.remove(id);
+  }
+
+  @ResolveField(() => SayartawEntity, { name: 'sayartaw' })
+  sayartaw(@Parent() tayartaw: TayartawEntity) {
+    return this.sayartawSerivce.findOne(tayartaw.sayartawId);
   }
 }
