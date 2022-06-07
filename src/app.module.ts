@@ -7,6 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { join } from 'path';
+import { TayartawsModule } from './tayartaws/tayartaws.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { join } from 'path';
     }),
     PrismaModule,
     UsersModule,
+    TayartawsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

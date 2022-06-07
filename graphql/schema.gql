@@ -2,35 +2,94 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateTayartawInput {
+  """Tayartaw Cover"""
+  cover: String!
+
+  """Tayartaw Description"""
+  description: String!
+
+  """Tayartaw Path"""
+  path: String!
+
+  """Sayartaw ID"""
+  sayartawId: String!
+
+  """Tayartaw Title"""
+  title: String!
+}
+
 input CreateUserInput {
-  """
-  User's email
-  """
+  """User's email"""
   email: String!
 
-  """
-  User's name
-  """
+  """User's name"""
   name: String!
   password: String!
 }
 
 type Mutation {
+  createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!
+  removeTayartaw(id: String!): TayartawEntity!
   removeUser(id: Int!): UserEntity!
+  updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
 }
 
 type Query {
-  """
-  Find user by id or email
-  """
+  tayartaw(id: Int!): TayartawEntity!
+  tayartaws: [TayartawEntity!]!
+
+  """Find user by id or email"""
   user(id: String!): UserEntity!
 
-  """
-  Get all users
-  """
+  """Get all users"""
   users: [UserEntity!]!
+}
+
+type TayartawEntity {
+  """Tayartaw Cover"""
+  cover: String!
+
+  """Tayartaw CreatedAt"""
+  createdAt: String!
+
+  """Tayartaw Description"""
+  description: String!
+
+  """Tayartaw ID"""
+  id: String!
+
+  """Tayartaw Path"""
+  path: String!
+
+  """Sayartaw ID"""
+  sayartawId: String!
+
+  """Tayartaw Title"""
+  title: String!
+
+  """Tayartaw UpdatedAt"""
+  updatedAt: String!
+}
+
+input UpdateTayartawInput {
+  """Tayartaw Cover"""
+  cover: String
+
+  """Tayartaw Description"""
+  description: String
+  id: String!
+
+  """Tayartaw Path"""
+  path: String
+
+  """Sayartaw ID"""
+  sayartawId: String
+
+  """Tayartaw Title"""
+  title: String
 }
 
 input UpdateUserInput {
@@ -39,40 +98,26 @@ input UpdateUserInput {
 }
 
 type UserEntity {
-  """
-  User's createdAt
-  """
+  """User's createdAt"""
   createdAt: String!
 
-  """
-  User's email
-  """
+  """User's email"""
   email: String!
 
-  """
-  User's ID
-  """
+  """User's ID"""
   id: String!
 
-  """
-  User's name
-  """
+  """User's name"""
   name: String!
 
-  """
-  User's role
-  """
+  """User's role"""
   role: UserRole!
 
-  """
-  User's updatedAt
-  """
+  """User's updatedAt"""
   updatedAt: String!
 }
 
-"""
-User role
-"""
+"""User role"""
 enum UserRole {
   ADMIN
   EDITOR

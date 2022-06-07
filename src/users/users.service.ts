@@ -55,8 +55,8 @@ export class UsersService {
     }
   }
 
-  remove(id: string) {
-    const user = this.findOne(id);
+  async remove(id: string) {
+    const user = await this.findOne(id);
 
     if (!user) {
       throw new Error('User not found');

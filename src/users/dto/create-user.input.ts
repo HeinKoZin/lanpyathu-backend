@@ -1,5 +1,5 @@
 import { UserEntity } from './../entities/user.entity';
-import { InputType, Int, Field, OmitType, ArgsType } from '@nestjs/graphql';
+import { InputType, Field, OmitType, ArgsType } from '@nestjs/graphql';
 
 @ArgsType()
 @InputType()
