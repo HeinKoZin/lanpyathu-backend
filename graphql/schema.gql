@@ -3,10 +3,14 @@
 # ------------------------------------------------------
 
 input CreateUserInput {
-  """User's email"""
+  """
+  User's email
+  """
   email: String!
 
-  """User's name"""
+  """
+  User's name
+  """
   name: String!
   password: String!
 }
@@ -18,10 +22,14 @@ type Mutation {
 }
 
 type Query {
-  """Find user by id or email"""
+  """
+  Find user by id or email
+  """
   user(id: String!): UserEntity!
 
-  """Get all users"""
+  """
+  Get all users
+  """
   users: [UserEntity!]!
 }
 
@@ -31,26 +39,40 @@ input UpdateUserInput {
 }
 
 type UserEntity {
-  """User's createdAt"""
+  """
+  User's createdAt
+  """
   createdAt: String!
 
-  """User's email"""
+  """
+  User's email
+  """
   email: String!
 
-  """User's ID"""
+  """
+  User's ID
+  """
   id: String!
 
-  """User's name"""
+  """
+  User's name
+  """
   name: String!
 
-  """User's role"""
+  """
+  User's role
+  """
   role: UserRole!
 
-  """User's updatedAt"""
+  """
+  User's updatedAt
+  """
   updatedAt: String!
 }
 
-"""User role"""
+"""
+User role
+"""
 enum UserRole {
   ADMIN
   EDITOR
