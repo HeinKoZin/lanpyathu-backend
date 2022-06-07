@@ -38,8 +38,8 @@ export class UsersService {
     return user;
   }
 
-  update(updateUserInput: UpdateUserInput) {
-    const user = this.findOne(updateUserInput.id);
+  async update(updateUserInput: UpdateUserInput) {
+    const user = await this.findOne(updateUserInput.id);
 
     if (!user) {
       throw new Error('User not found');

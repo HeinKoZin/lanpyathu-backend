@@ -7,4 +7,7 @@ export class CreateUserInput extends OmitType(
   UserEntity,
   ['id', 'role', 'createdAt', 'updatedAt'] as const,
   InputType,
-) {}
+) {
+  @Field(() => String)
+  password: string;
+}

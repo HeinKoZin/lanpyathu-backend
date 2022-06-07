@@ -8,8 +8,6 @@ input CreateUserInput {
 
   """User's name"""
   name: String!
-
-  """User's password"""
   password: String!
 }
 
@@ -29,6 +27,7 @@ type Query {
 
 input UpdateUserInput {
   id: String!
+  role: UserRole!
 }
 
 type UserEntity {
@@ -44,9 +43,6 @@ type UserEntity {
   """User's name"""
   name: String!
 
-  """User's password"""
-  password: String!
-
   """User's role"""
   role: UserRole!
 
@@ -54,6 +50,7 @@ type UserEntity {
   updatedAt: String!
 }
 
+"""User role"""
 enum UserRole {
   ADMIN
   EDITOR
