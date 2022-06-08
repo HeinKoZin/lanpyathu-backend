@@ -70,7 +70,7 @@ model Tayartaw {
   description     String
   Sayartaw         Sayartaw?          @relation(fields: [sayartawId], references: [id])
   sayartawId       String?
-  CategoryTayartaw CategoryTayartaw[]
+  categories Category[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
@@ -97,20 +97,20 @@ model Category {
   parentId        String?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  CategoryTayartaw CategoryTayartaw[]
+  tayartaws Tayartaw[]
 }
 
-model CategoryTayartaw {
-  id           String   @id @default(cuid())
-  name         String
-  tayartawId  String
-  categoryId  String
-  product      Tayartaw @relation(fields: [tayartawId], references: [id])
-  category     Category @relation(fields: [categoryId], references: [id])
+// model CategoryTayartaw {
+//   id           String   @id @default(cuid())
+//   name         String
+//   tayartawId  String
+//   categoryId  String
+//   product      Tayartaw @relation(fields: [tayartawId], references: [id])
+//   category     Category @relation(fields: [categoryId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 model Blog{
   id        String    @id @default(cuid())

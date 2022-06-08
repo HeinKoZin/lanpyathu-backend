@@ -35,6 +35,11 @@ export class TayartawsResolver {
     return this.tayartawsService.findAll();
   }
 
+  // @ResolveField(() => [CategoryEntity], { name: 'categories' })
+  // async categories(@Parent() tayartaw: TayartawEntity) {
+  //   return await tayartaw.categories;
+  // }
+
   @Query(() => TayartawEntity, { name: 'tayartaw' })
   findOne(@Args('id', { type: () => Int }) id: string) {
     return this.tayartawsService.findOne(id);

@@ -4,7 +4,7 @@
 
 type CategoryEntity {
   createdAt: String!
-  id: Int!
+  id: String!
   image: String!
   name: String!
   parentId: String
@@ -29,6 +29,8 @@ input CreateSayartawInput {
 }
 
 input CreateTayartawInput {
+  categoryIds: [String!]
+
   """Tayartaw Cover"""
   cover: String!
 
@@ -106,6 +108,8 @@ type SayartawEntity {
 }
 
 type TayartawEntity {
+  categories: [CategoryEntity!]!
+
   """Tayartaw Cover"""
   cover: String!
 
@@ -152,6 +156,8 @@ input UpdateSayartawInput {
 }
 
 input UpdateTayartawInput {
+  categoryIds: [String!]
+
   """Tayartaw Cover"""
   cover: String
 

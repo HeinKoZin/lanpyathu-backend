@@ -1,5 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Tayartaw } from '@prisma/client';
+import { CategoryEntity } from 'src/categories/entities/category.entity';
 
 @ObjectType()
 export class TayartawEntity implements Tayartaw {
@@ -20,6 +21,9 @@ export class TayartawEntity implements Tayartaw {
 
   @Field(() => String, { description: 'Sayartaw ID' })
   sayartawId: string;
+
+  @Field(() => [CategoryEntity])
+  categories: [CategoryEntity];
 
   @Field(() => String, { description: 'Tayartaw CreatedAt' })
   createdAt: Date;

@@ -17,7 +17,9 @@ export class TayartawsService {
   }
 
   async findAll() {
-    const allTayartaws = await this.prismaService.tayartaw.findMany();
+    const allTayartaws = await this.prismaService.tayartaw.findMany({
+      include: { categories: true },
+    });
     return allTayartaws;
   }
 
@@ -32,6 +34,7 @@ export class TayartawsService {
 
   async update(updateTayartawInput: UpdateTayartawInput) {
     const tayartaw = await this.findOne(updateTayartawInput.id);
+    // const categoryIds = updateTayartawInput.categoryIds;
 
     if (!tayartaw) {
       throw new Error('Tayartaw not found');
@@ -40,8 +43,21 @@ export class TayartawsService {
         where: {
           id: updateTayartawInput.id,
         },
+
         data: {
-          ...updateTayartawInput,
+          title: updateTayartawInput.title,
+          description: updateTayartawInput.description,
+          cover: updateTayartawInput.cover,
+          sayartawId: updateTayartawInput.sayartawId,
+          path: updateTayartawInput.path,
+          categories: {
+            connect: updateTayartawInput.categoryIds.map((category) => ({
+              id: category,
+            })),
+          },
+        },
+        include: {
+          categories: true,
         },
       });
     }

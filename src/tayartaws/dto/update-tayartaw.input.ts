@@ -5,4 +5,7 @@ import { InputType, Field, PartialType } from '@nestjs/graphql';
 export class UpdateTayartawInput extends PartialType(CreateTayartawInput) {
   @Field(() => String)
   id: string;
+
+  // @Field(() => [CategoryEntity])
+  // categories: [CategoryEntity];
 }
