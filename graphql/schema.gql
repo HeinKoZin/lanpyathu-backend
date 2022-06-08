@@ -2,6 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CategoryEntity {
+  createdAt: String!
+  id: Int!
+  image: String!
+  name: String!
+  parentId: String
+  updatedAt: String!
+}
+
+input CreateCategoryInput {
+  image: String!
+  name: String!
+  parentId: String
+}
+
 input CreateSayartawInput {
   """Sayartaw bio"""
   bio: String!
@@ -40,18 +55,23 @@ input CreateUserInput {
 }
 
 type Mutation {
+  createCategory(createCategoryInput: CreateCategoryInput!): CategoryEntity!
   createSayartaw(createSayartawInput: CreateSayartawInput!): SayartawEntity!
   createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!
+  removeCategory(id: String!): CategoryEntity!
   removeSayartaw(id: String!): SayartawEntity!
   removeTayartaw(id: String!): TayartawEntity!
   removeUser(id: Int!): UserEntity!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): CategoryEntity!
   updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
 }
 
 type Query {
+  categories: [CategoryEntity!]!
+  category(id: String!): CategoryEntity!
   sayartaw(id: String!): SayartawEntity!
   sayartaws: [SayartawEntity!]!
   tayartaw(id: Int!): TayartawEntity!
@@ -110,6 +130,13 @@ type TayartawEntity {
 
   """Tayartaw UpdatedAt"""
   updatedAt: String!
+}
+
+input UpdateCategoryInput {
+  id: String!
+  image: String
+  name: String
+  parentId: String
 }
 
 input UpdateSayartawInput {

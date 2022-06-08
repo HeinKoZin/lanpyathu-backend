@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { join } from 'path';
 import { TayartawsModule } from './tayartaws/tayartaws.module';
 import { SayartawsModule } from './sayartaws/sayartaws.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SayartawsModule } from './sayartaws/sayartaws.module';
     UsersModule,
     TayartawsModule,
     SayartawsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
