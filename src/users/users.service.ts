@@ -8,12 +8,16 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserInput: CreateUserInput) {
-    const checkExistUser = this.findOne(createUserInput.email);
+    const checkExistUser = await this.prismaService.user.findUnique({
+      where: {
+        email: createUserInput.email,
+      },
+    });
 
     if (checkExistUser) {
       throw new Error('User already exist');
     } else {
-      return this.prismaService.user.create({
+      return await this.prismaService.user.create({
         data: {
           ...createUserInput,
           role: 'USER',

@@ -120,6 +120,18 @@ model Blog{
   markdown   String
   content    String
   rendered_markdown String
+  isPublished Boolean @default(false)
+  categories BlogCategory[]
+  publishedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogCategory {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String  @unique
+  posts     Blog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
