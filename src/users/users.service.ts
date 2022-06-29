@@ -39,6 +39,12 @@ export class UsersService {
       },
     });
 
+    if (!user) {
+      return {
+        message: 'User not found',
+      };
+    }
+
     return user;
   }
 

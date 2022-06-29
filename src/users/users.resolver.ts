@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { UserResponse } from './dto/user.response';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -18,7 +19,7 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => UserEntity, {
+  @Query(() => UserResponse, {
     name: 'user',
     description: 'Find user by id or email',
   })

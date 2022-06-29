@@ -80,7 +80,7 @@ type Query {
   tayartaws: [TayartawEntity!]!
 
   """Find user by id or email"""
-  user(id: String!): UserEntity!
+  user(id: String!): UserResponse!
 
   """Get all users"""
   users: [UserEntity!]!
@@ -199,6 +199,12 @@ type UserEntity {
   """User's updatedAt"""
   updatedAt: String!
 }
+
+type UserErrorResponse {
+  message: String!
+}
+
+union UserResponse = UserEntity | UserErrorResponse
 
 """User role"""
 enum UserRole {
