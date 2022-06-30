@@ -56,11 +56,28 @@ input CreateUserInput {
   password: String!
 }
 
+type LoginResponse {
+  """User token"""
+  token: String!
+
+  """User data"""
+  user: UserEntity!
+}
+
+input LoginUserInput {
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
+}
+
 type Mutation {
   createCategory(createCategoryInput: CreateCategoryInput!): CategoryEntity!
   createSayartaw(createSayartawInput: CreateSayartawInput!): SayartawEntity!
   createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
   removeCategory(id: String!): CategoryEntity!
   removeSayartaw(id: String!): SayartawEntity!
   removeTayartaw(id: String!): TayartawEntity!
