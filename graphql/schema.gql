@@ -56,6 +56,17 @@ input CreateUserInput {
   password: String!
 }
 
+type CurrentUserEntity {
+  """User's email"""
+  email: String!
+
+  """User's ID"""
+  id: String!
+
+  """User's name"""
+  name: String!
+}
+
 type LoginResponse {
   """User token"""
   token: String!
@@ -91,6 +102,7 @@ type Mutation {
 type Query {
   categories: [CategoryEntity!]!
   category(id: String!): CategoryEntity!
+  me: CurrentUserEntity!
   sayartaw(id: String!): SayartawEntity!
   sayartaws: [SayartawEntity!]!
   tayartaw(id: Int!): TayartawEntity!
