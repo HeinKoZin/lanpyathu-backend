@@ -56,17 +56,6 @@ input CreateUserInput {
   password: String!
 }
 
-type CurrentUserEntity {
-  """User's email"""
-  email: String!
-
-  """User's ID"""
-  id: String!
-
-  """User's name"""
-  name: String!
-}
-
 type LoginResponse {
   """User token"""
   token: String!
@@ -102,14 +91,14 @@ type Mutation {
 type Query {
   categories: [CategoryEntity!]!
   category(id: String!): CategoryEntity!
-  me: CurrentUserEntity!
+  me: UserEntity!
   sayartaw(id: String!): SayartawEntity!
   sayartaws: [SayartawEntity!]!
   tayartaw(id: Int!): TayartawEntity!
   tayartaws: [TayartawEntity!]!
 
   """Find user by id or email"""
-  user(id: String!): UserResponse!
+  user(id: String!): UserEntity!
 
   """Get all users"""
   users: [UserEntity!]!
@@ -228,12 +217,6 @@ type UserEntity {
   """User's updatedAt"""
   updatedAt: String!
 }
-
-type UserErrorResponse {
-  message: String!
-}
-
-union UserResponse = UserEntity | UserErrorResponse
 
 """User role"""
 enum UserRole {

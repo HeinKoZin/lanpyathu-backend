@@ -40,9 +40,7 @@ export class UsersService {
     });
 
     if (!user) {
-      return {
-        message: 'User not found',
-      };
+      throw new UnauthorizedException();
     }
 
     return user;

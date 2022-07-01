@@ -19,7 +19,7 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => UserResponse, {
+  @Query(() => UserEntity, {
     name: 'user',
     description: 'Find user by id or email',
   })

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CurrentUserEntity } from '@users/entities/current-user.entity';
 import { UserEntity } from '@users/entities/user.entity';
 import { UsersService } from '@users/users.service';
 import { LoginResponse } from './dto/login.response';
@@ -31,5 +32,9 @@ export class AuthService {
       }),
       user,
     };
+  }
+
+  async me(currentUser: CurrentUserEntity): Promise<UserEntity> {
+    return this.usersService.findOne(currentUser.id);
   }
 }
