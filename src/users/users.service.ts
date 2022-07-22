@@ -2,6 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
+// import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 
 @Injectable()
 export class UsersService {
@@ -90,6 +92,27 @@ export class UsersService {
           id: id,
         },
       });
+    }
+  }
+
+  async uploadUserPic(uploadUserProfilePicInput: UploadUserProfilePicInput) {
+    const user = await this.findOne(uploadUserProfilePicInput.id);
+    console.log(uploadUserProfilePicInput);
+    if (!user) {
+      throw new Error('User not found');
+    } else {
+      console.log(uploadUserProfilePicInput);
+      return {
+        success: true,
+      };
+      // return this.prismaService.user.update({
+      //   where: {
+      //     id: uploadUserProfilePicInput.id,
+      //   },
+      //   data: {
+      //     ...uploadUserProfilePicInput,
+      //   },
+      // });
     }
   }
 }

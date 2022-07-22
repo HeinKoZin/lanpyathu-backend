@@ -54,6 +54,9 @@ input CreateUserInput {
   """User's name"""
   name: String!
   password: String!
+
+  """User's photo"""
+  photo: String!
 }
 
 type LoginResponse {
@@ -86,6 +89,7 @@ type Mutation {
   updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
+  uploadUserProfilePic(uploadUserProfilePicInput: UploadUserProfilePicInput!): UploadResponse!
 }
 
 type Query {
@@ -198,6 +202,18 @@ input UpdateUserInput {
   role: UserRole!
 }
 
+"""Upload custom scalar type"""
+scalar Upload
+
+type UploadResponse {
+  success: Boolean!
+}
+
+input UploadUserProfilePicInput {
+  id: String!
+  photo: Upload!
+}
+
 type UserEntity {
   """User's createdAt"""
   createdAt: String!
@@ -210,6 +226,9 @@ type UserEntity {
 
   """User's name"""
   name: String!
+
+  """User's photo"""
+  photo: String!
 
   """User's role"""
   role: UserRole!

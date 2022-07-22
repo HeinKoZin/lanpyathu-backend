@@ -3,7 +3,13 @@ import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { UserResponse } from './dto/user.response';
+// import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
+// import { createWriteStream } from 'fs';
+// import { FileUpload, GraphQLUpload } from 'graphql-upload';
+// import { UploadResponse } from './dto/upload.response';
+// import * as fs from 'fs';
+import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
+import { UploadResponse } from './dto/upload.response';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -36,4 +42,27 @@ export class UsersResolver {
   removeUser(@Args('id', { type: () => Int }) id: string) {
     return this.usersService.remove(id);
   }
+
+  @Mutation(() => UploadResponse, { name: 'uploadUserProfilePic' })
+  async uploadUserPic(
+    @Args('uploadUserProfilePicInput')
+    uploadUserProfilePicInput: UploadUserProfilePicInput,
+  ) {
+    return await this.usersService.uploadUserPic(uploadUserProfilePicInput);
+  }
+
+  // @Mutation(() => Boolean, { name: 'coverPhoto' })
+  // async uploadCoverPhoto(
+  //   @Args('file', { type: () => GraphQLUpload })
+  //   { filename, createReadStream }: FileUpload,
+  // ): Promise<boolean> {
+  //   const filePath = `./uploaded/cover-photos/${filename}`;
+  //   const stream = createReadStream();
+  //   return await new Promise((resolve, reject) =>
+  //     stream
+  //       .pipe(fs.createWriteStream(filePath))
+  //       .on('finish', () => resolve(true))
+  //       .on('error', () => reject(false)),
+  //   );
+  // }
 }

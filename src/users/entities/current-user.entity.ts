@@ -6,4 +6,5 @@ export class CurrentUserEntity extends PickType(UserEntity, [
   'name',
   'id',
   'email',
+  'photo',
 ]) {}

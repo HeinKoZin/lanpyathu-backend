@@ -13,10 +13,12 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { Upload } from '@scalars/Upload.scalar';
 
 @Global()
 @Module({
   imports: [
+    Upload,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'graphql/schema.gql'),
