@@ -6,6 +6,7 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 // import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 import * as fs from 'fs';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class UsersService {
@@ -117,8 +118,18 @@ export class UsersService {
       const filePath = `./uploaded/user_profile_pics/${name}`;
       const stream = createReadStream();
 
+      // Compress Image with sharp
+      const transformer = sharp()
+        .resize(800)
+        .webp({ quality: 60 })
+        .toFormat('webp')
+        .on('info', function (info) {
+          console.log('Image height is ' + info.height);
+        });
+
       return await new Promise((resolve, reject) =>
         stream
+          .pipe(transformer)
           .pipe(fs.createWriteStream(filePath))
           .on('finish', async () => {
             await this.prismaService.user.update({

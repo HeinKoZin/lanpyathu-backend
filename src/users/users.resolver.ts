@@ -65,4 +65,12 @@ export class UsersResolver {
   //       .on('error', () => reject(false)),
   //   );
   // }
+
+  // @Mutation(() => UploadResponse, { name: 'uploadCoverPhoto' })
+  // async uploadCoverPhoto(
+  //   @Args('file', { type: () => GraphQLUpload }, ImageSharpPipe)
+  //   file: TestUpload,
+  // ) {
+  //   return { success: true };
+  // }
 }
