@@ -6,12 +6,6 @@ import {
 } from '@nestjs/graphql';
 import { User, UserRole } from '@prisma/client';
 
-// @ObjectType()
-// export class User {
-//   @Field(() => Int, { description: 'Example field (placeholder)' })
-//   exampleField: number;
-// }
-
 @ObjectType()
 export class UserEntity implements User {
   @Field(() => String, { description: "User's ID" })

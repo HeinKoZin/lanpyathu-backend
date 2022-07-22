@@ -51,7 +51,7 @@ export class TayartawsService {
           sayartawId: updateTayartawInput.sayartawId,
           path: updateTayartawInput.path,
           categories: {
-            connect: updateTayartawInput.categoryIds.map((category) => ({
+            connect: updateTayartawInput?.categoryIds?.map((category) => ({
               id: category,
             })),
           },

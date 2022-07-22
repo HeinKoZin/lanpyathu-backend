@@ -1,9 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { FileUpload } from 'graphql-upload';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 // import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
+import * as fs from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -29,7 +31,14 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.prismaService.user.findMany();
+    // return all users with photo url istead of photo name
+    const users = await this.prismaService.user.findMany({});
+    return users.map((user) => {
+      return {
+        ...user,
+        photo: `http://localhost:9000/uploaded/user_profile_pics/${user.photo}`,
+      };
+    });
   }
 
   async findOne(id?: string, email?: string) {
@@ -40,6 +49,7 @@ export class UsersService {
         email: email,
       },
     });
+    console.log(user);
 
     if (!user) {
       throw new UnauthorizedException();
@@ -97,22 +107,33 @@ export class UsersService {
 
   async uploadUserPic(uploadUserProfilePicInput: UploadUserProfilePicInput) {
     const user = await this.findOne(uploadUserProfilePicInput.id);
-    console.log(uploadUserProfilePicInput);
     if (!user) {
       throw new Error('User not found');
     } else {
-      console.log(uploadUserProfilePicInput);
-      return {
-        success: true,
-      };
-      // return this.prismaService.user.update({
-      //   where: {
-      //     id: uploadUserProfilePicInput.id,
-      //   },
-      //   data: {
-      //     ...uploadUserProfilePicInput,
-      //   },
-      // });
+      const { filename, createReadStream } =
+        (await uploadUserProfilePicInput.photo) as unknown as FileUpload;
+      const name = `${Date.now()}-${user.id}.${filename.split('.').pop()}`;
+      const filePath = `./uploaded/user_profile_pics/${name}`;
+      const stream = createReadStream();
+
+      return await new Promise((resolve, reject) =>
+        stream
+          .pipe(fs.createWriteStream(filePath))
+          .on('finish', async () => {
+            await this.prismaService.user.update({
+              where: {
+                id: uploadUserProfilePicInput.id,
+              },
+              data: {
+                photo: name,
+              },
+            });
+            resolve({ success: true });
+          })
+          .on('error', () => {
+            reject({ success: false });
+          }),
+      );
     }
   }
 }
