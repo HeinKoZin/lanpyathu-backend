@@ -34,9 +34,10 @@ export class UsersService {
     // return all users with photo url istead of photo name
     const users = await this.prismaService.user.findMany({});
     return users.map((user) => {
+      // return user with photo url instead of photo name
       return {
         ...user,
-        photo: `http://localhost:9000/uploaded/user_profile_pics/${user.photo}`,
+        photo: `${process.env.HOST}:${process.env.PORT}/uploaded/user_profile_pics/${user.photo}`,
       };
     });
   }

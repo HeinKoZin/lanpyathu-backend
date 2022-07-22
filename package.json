@@ -29,6 +29,7 @@
     "@nestjs/jwt": "^8.0.1",
     "@nestjs/passport": "^8.2.2",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/serve-static": "^3.0.0",
     "@prisma/client": "^3.14.0",
     "@types/file-type": "^10.9.1",
     "@types/graphql-upload": "^8.0.11",
