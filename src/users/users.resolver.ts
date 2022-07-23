@@ -5,11 +5,13 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 // import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 // import { createWriteStream } from 'fs';
-// import { FileUpload, GraphQLUpload } from 'graphql-upload';
+// import { FileUpload as TestUpload, GraphQLUpload } from 'graphql-upload';
 // import { UploadResponse } from './dto/upload.response';
 // import * as fs from 'fs';
 import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 import { UploadResponse } from './dto/upload.response';
+import { ProfileImageSharpPipe } from '@profile-image-sharp.pipe';
+import { UploadedUserProfilePicResponse } from './dto/uploaded-user-profile-pic.response';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -66,11 +68,15 @@ export class UsersResolver {
   //   );
   // }
 
-  // @Mutation(() => UploadResponse, { name: 'uploadCoverPhoto' })
-  // async uploadCoverPhoto(
-  //   @Args('file', { type: () => GraphQLUpload }, ImageSharpPipe)
-  //   file: TestUpload,
-  // ) {
-  //   return { success: true };
-  // }
+  @Mutation(() => UploadResponse, { name: 'uploadCoverPhoto' })
+  async uploadCoverPhoto(
+    @Args(
+      'data',
+      { type: () => UploadUserProfilePicInput },
+      ProfileImageSharpPipe,
+    )
+    data: UploadedUserProfilePicResponse,
+  ) {
+    return await this.usersService.setUserProfilePic(data);
+  }
 }

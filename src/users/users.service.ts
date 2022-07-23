@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UploadedUserProfilePicResponse } from './dto/uploaded-user-profile-pic.response';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
@@ -7,6 +12,7 @@ import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 // import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 import * as fs from 'fs';
 import * as sharp from 'sharp';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -54,7 +60,7 @@ export class UsersService {
     console.log(user);
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException("User doesn't exist");
     }
 
     return user;
@@ -120,7 +126,7 @@ export class UsersService {
 
       // Compress Image with sharp
       const transformer = sharp()
-        .resize(800)
+        .resize(600)
         .webp({ quality: 60 })
         .toFormat('webp')
         .on('info', function (info) {
@@ -146,6 +152,75 @@ export class UsersService {
             reject({ success: false });
           }),
       );
+    }
+  }
+
+  async setUserProfilePic(data: UploadedUserProfilePicResponse) {
+    console.log(data);
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: data.id,
+      },
+    });
+    if (!user) {
+      // delete file from uploaded folder
+      fs.unlink(
+        path.join(__dirname, '../../uploaded/user_profile_pics', data.photo),
+        (err) => {
+          if (err) throw new Error(err.message);
+          console.log('successfully deleted');
+        },
+      );
+
+      throw new Error('User not found');
+    } else {
+      // rename file from uploaded folder
+      if (user.photo) {
+        // delete image if user photo is already exist in uploaded folder
+        fs.stat(
+          path.join(__dirname, '../../uploaded/user_profile_pics', user.photo),
+          (err, stats) => {
+            if (stats) {
+              fs.unlink(
+                path.join(
+                  __dirname,
+                  '../../uploaded/user_profile_pics',
+                  user.photo,
+                ),
+                (err) => {
+                  if (err) throw new Error(err.message);
+                  console.log('successfully deleted');
+                },
+              );
+            }
+          },
+        );
+      }
+
+      const filename = `${Date.now()}-${user.id}.${data.photo
+        .split('.')
+        .pop()}`;
+
+      fs.rename(
+        path.join(__dirname, '../../uploaded/user_profile_pics', data.photo),
+        path.join(__dirname, '../../uploaded/user_profile_pics', filename),
+        async (err) => {
+          if (err) throw new Error(err.message);
+          console.log('successfully renamed');
+          await this.prismaService.user.update({
+            where: {
+              id: data.id,
+            },
+            data: {
+              photo: filename,
+            },
+          });
+        },
+      );
+
+      return {
+        success: true,
+      };
     }
   }
 }

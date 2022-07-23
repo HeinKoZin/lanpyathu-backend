@@ -89,6 +89,7 @@ type Mutation {
   updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
+  uploadCoverPhoto(data: UploadUserProfilePicInput!): UploadResponse!
   uploadUserProfilePic(uploadUserProfilePicInput: UploadUserProfilePicInput!): UploadResponse!
 }
 
