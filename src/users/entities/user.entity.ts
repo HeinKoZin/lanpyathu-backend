@@ -6,12 +6,6 @@ import {
 } from '@nestjs/graphql';
 import { User, UserRole } from '@prisma/client';
 
-// @ObjectType()
-// export class User {
-//   @Field(() => Int, { description: 'Example field (placeholder)' })
-//   exampleField: number;
-// }
-
 @ObjectType()
 export class UserEntity implements User {
   @Field(() => String, { description: "User's ID" })
@@ -28,6 +22,9 @@ export class UserEntity implements User {
 
   @Field(() => UserRole, { description: "User's role" })
   role: UserRole;
+
+  @Field(() => String, { description: "User's photo" })
+  photo: string;
 
   @Field(() => String, { description: "User's createdAt" })
   createdAt: Date;

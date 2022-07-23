@@ -8,5 +8,5 @@ export class CreateTayartawInput extends OmitType(
   InputType,
 ) {
   @Field(() => [String], { nullable: true })
-  categoryIds: string[];
+  categoryIds?: string[];
 }

@@ -54,6 +54,25 @@ input CreateUserInput {
   """User's name"""
   name: String!
   password: String!
+
+  """User's photo"""
+  photo: String!
+}
+
+type LoginResponse {
+  """User token"""
+  token: String!
+
+  """User data"""
+  user: UserEntity!
+}
+
+input LoginUserInput {
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
 }
 
 type Mutation {
@@ -61,6 +80,7 @@ type Mutation {
   createSayartaw(createSayartawInput: CreateSayartawInput!): SayartawEntity!
   createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
   removeCategory(id: String!): CategoryEntity!
   removeSayartaw(id: String!): SayartawEntity!
   removeTayartaw(id: String!): TayartawEntity!
@@ -69,18 +89,21 @@ type Mutation {
   updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
+  uploadCoverPhoto(data: UploadUserProfilePicInput!): UploadResponse!
+  uploadUserProfilePic(uploadUserProfilePicInput: UploadUserProfilePicInput!): UploadResponse!
 }
 
 type Query {
   categories: [CategoryEntity!]!
   category(id: String!): CategoryEntity!
+  me: UserEntity!
   sayartaw(id: String!): SayartawEntity!
   sayartaws: [SayartawEntity!]!
   tayartaw(id: Int!): TayartawEntity!
   tayartaws: [TayartawEntity!]!
 
   """Find user by id or email"""
-  user(id: String!): UserResponse!
+  user(id: String!): UserEntity!
 
   """Get all users"""
   users: [UserEntity!]!
@@ -180,6 +203,18 @@ input UpdateUserInput {
   role: UserRole!
 }
 
+"""Upload custom scalar type"""
+scalar Upload
+
+type UploadResponse {
+  success: Boolean!
+}
+
+input UploadUserProfilePicInput {
+  id: String!
+  photo: Upload!
+}
+
 type UserEntity {
   """User's createdAt"""
   createdAt: String!
@@ -193,18 +228,15 @@ type UserEntity {
   """User's name"""
   name: String!
 
+  """User's photo"""
+  photo: String!
+
   """User's role"""
   role: UserRole!
 
   """User's updatedAt"""
   updatedAt: String!
 }
-
-type UserErrorResponse {
-  message: String!
-}
-
-union UserResponse = UserEntity | UserErrorResponse
 
 """User role"""
 enum UserRole {
