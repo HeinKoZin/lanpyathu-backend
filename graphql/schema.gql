@@ -56,7 +56,7 @@ input CreateUserInput {
   password: String!
 
   """User's photo"""
-  photo: String!
+  photo: String
 }
 
 type LoginResponse {
@@ -229,7 +229,7 @@ type UserEntity {
   name: String!
 
   """User's photo"""
-  photo: String!
+  photo: String
 
   """User's role"""
   role: UserRole!
