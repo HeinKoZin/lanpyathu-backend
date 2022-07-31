@@ -23,7 +23,7 @@ Table tayartaws {
   description String [not null]
   Sayartaw sayartaws
   sayartawId String
-  categories Category [not null]
+  categories categories [not null]
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
 }
@@ -38,7 +38,7 @@ Table sayartaws {
   updatedAt DateTime [not null]
 }
 
-Table Category {
+Table categories {
   id String [pk]
   image String [not null]
   name String [not null]
@@ -48,7 +48,7 @@ Table Category {
   tayartaws tayartaws [not null]
 }
 
-Table Blog {
+Table blogs {
   id String [pk]
   title String [not null]
   cover String [not null]
@@ -57,29 +57,29 @@ Table Blog {
   content String [not null]
   rendered_markdown String [not null]
   isPublished Boolean [not null, default: false]
-  categories BlogCategory [not null]
+  categories blog_categories [not null]
   publishedAt DateTime
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table BlogCategory {
+Table blog_categories {
   id String [pk]
   name String [not null]
   slug String [unique, not null]
-  posts Blog [not null]
+  posts blogs [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
 Table CategoryToTayartaw {
-  categoriesId String [ref: > Category.id]
+  categoriesId String [ref: > categories.id]
   tayartawsId String [ref: > tayartaws.id]
 }
 
 Table BlogToBlogCategory {
-  categoriesId String [ref: > BlogCategory.id]
-  postsId String [ref: > Blog.id]
+  categoriesId String [ref: > blog_categories.id]
+  postsId String [ref: > blogs.id]
 }
 
 Enum UserRole {

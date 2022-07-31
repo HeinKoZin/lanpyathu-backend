@@ -66,6 +66,8 @@ enum UserRole {
   ADMIN
   EDITOR
   USER
+  
+  @@map("user_roles")
 }
 
 model Tayartaw {
@@ -100,10 +102,12 @@ model Category {
   id               String             @id @default(cuid())
   image            String
   name             String
-  parentId        String?
+  parentId         String?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   tayartaws Tayartaw[]
+
+  @@map("categories")
 }
 
 // model CategoryTayartaw {
@@ -131,6 +135,8 @@ model Blog{
   publishedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("blogs")
 }
 
 model BlogCategory {
@@ -140,4 +146,6 @@ model BlogCategory {
   posts     Blog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("blog_categories")
 }

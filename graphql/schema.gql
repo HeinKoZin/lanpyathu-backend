@@ -11,8 +11,8 @@ type CategoryEntity {
   updatedAt: String!
 }
 
-input CreateCategoryInput {
-  image: String!
+input CreateCategoryWithImageInput {
+  image: Upload!
   name: String!
   parentId: String
 }
@@ -76,7 +76,7 @@ input LoginUserInput {
 }
 
 type Mutation {
-  createCategory(createCategoryInput: CreateCategoryInput!): CategoryEntity!
+  createCategory(createCategoryInput: CreateCategoryWithImageInput!): CategoryEntity!
   createSayartaw(createSayartawInput: CreateSayartawInput!): SayartawEntity!
   createTayartaw(createTayartawInput: CreateTayartawInput!): TayartawEntity!
   createUser(createUserInput: CreateUserInput!): UserEntity!

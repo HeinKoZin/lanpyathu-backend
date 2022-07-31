@@ -10,7 +10,7 @@ import { UpdateUserInput } from './dto/update-user.input';
 // import * as fs from 'fs';
 import { UploadUserProfilePicInput } from './dto/upload-user-photo.input';
 import { UploadResponse } from './dto/upload.response';
-import { ProfileImageSharpPipe } from '@profile-image-sharp.pipe';
+import { ProfileImageSharpPipe } from '@pipes/profile-image-sharp.pipe';
 import { UploadedUserProfilePicResponse } from './dto/uploaded-user-profile-pic.response';
 
 @Resolver(() => UserEntity)

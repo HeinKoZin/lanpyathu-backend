@@ -1,16 +1,16 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
+import { SetCategoryWithImageInput } from './dto/set-category.input';
 
 @Injectable()
 export class CategoriesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createCategoryInput: CreateCategoryInput) {
+  async create(data: SetCategoryWithImageInput) {
     const category = await this.prismaService.category.create({
       data: {
-        ...createCategoryInput,
+        ...data,
       },
     });
     return category;
@@ -18,6 +18,12 @@ export class CategoriesService {
 
   async findAll() {
     const allCategories = await this.prismaService.category.findMany();
+
+    // pass absolute path to image
+    allCategories.forEach((category) => {
+      category.image = `${process.env.HOST}:${process.env.PORT}/uploaded/thumbnails/category_images/${category.image}`;
+    });
+
     return allCategories;
   }
 
@@ -58,4 +64,13 @@ export class CategoriesService {
       });
     }
   }
+
+  // async createWithImage(data: SetCategoryWithImageInput) {
+  //   const category = await this.prismaService.category.create({
+  //     data: {
+  //       ...data,
+  //     },
+  //   });
+  //   return category;
+  // }
 }
