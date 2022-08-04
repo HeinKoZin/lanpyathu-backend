@@ -19,11 +19,6 @@ export class CategoriesService {
   async findAll() {
     const allCategories = await this.prismaService.category.findMany();
 
-    // pass absolute path to image
-    allCategories.forEach((category) => {
-      category.image = `${process.env.HOST}:${process.env.PORT}/uploaded/thumbnails/category_images/${category.image}`;
-    });
-
     return allCategories;
   }
 

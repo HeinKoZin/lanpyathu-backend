@@ -5,10 +5,15 @@
 type CategoryEntity {
   createdAt: String!
   id: String!
-  image: String!
+  image: CategoryImageEntity!
   name: String!
   parentId: String
   updatedAt: String!
+}
+
+type CategoryImageEntity {
+  original: String!
+  thumbnail: String!
 }
 
 input CreateCategoryWithImageInput {
@@ -161,7 +166,6 @@ type TayartawEntity {
 
 input UpdateCategoryInput {
   id: String!
-  image: String
   name: String
   parentId: String
 }

@@ -1,4 +1,4 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, HideField } from '@nestjs/graphql';
 import { Category } from '@prisma/client';
 
 @ObjectType()
@@ -6,7 +6,7 @@ export class CategoryEntity implements Category {
   @Field(() => String)
   id: string;
 
-  @Field(() => String)
+  @HideField()
   image: string;
 
   @Field(() => String)
