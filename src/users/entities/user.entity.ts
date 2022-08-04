@@ -23,7 +23,7 @@ export class UserEntity implements User {
   @Field(() => UserRole, { description: "User's role" })
   role: UserRole;
 
-  @Field(() => String, { description: "User's photo" })
+  @Field(() => String, { description: "User's photo", nullable: true })
   photo: string;
 
   @Field(() => String, { description: "User's createdAt" })

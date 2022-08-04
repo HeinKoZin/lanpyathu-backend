@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CategoriesService } from './categories.service';
 import { CategoryEntity } from './entities/category.entity';
-import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
+import { CreateCategoryWithImageInput } from './dto/create-category-with-image.input';
+import { SetCategoryWithImageInput } from './dto/set-category.input';
+import { CategoryImageSharpPipe } from '@pipes/category-image-sharp.pipe';
 
 @Resolver(() => CategoryEntity)
 export class CategoriesResolver {
@@ -10,9 +12,14 @@ export class CategoriesResolver {
 
   @Mutation(() => CategoryEntity)
   createCategory(
-    @Args('createCategoryInput') createCategoryInput: CreateCategoryInput,
+    @Args(
+      'createCategoryInput',
+      { type: () => CreateCategoryWithImageInput },
+      CategoryImageSharpPipe,
+    )
+    setCategory: SetCategoryWithImageInput,
   ) {
-    return this.categoriesService.create(createCategoryInput);
+    return this.categoriesService.create(setCategory);
   }
 
   @Query(() => [CategoryEntity], { name: 'categories' })
@@ -39,4 +46,16 @@ export class CategoriesResolver {
   removeCategory(@Args('id', { type: () => String }) id: string) {
     return this.categoriesService.remove(id);
   }
+
+  // @Mutation(() => CategoryEntity)
+  // createCategoryWithImage(
+  //   @Args(
+  //     'createCategoryInput',
+  //     { type: () => CreateCategoryWithImageInput },
+  //     CategoryImageSharpPipe,
+  //   )
+  //   setCategory: SetCategoryWithImageInput,
+  // ) {
+  //   return this.categoriesService.createWithImage(setCategory);
+  // }
 }
