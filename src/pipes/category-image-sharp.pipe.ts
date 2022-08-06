@@ -43,8 +43,18 @@ export class CategoryImageSharpPipe
         .split('.')
         .pop()}`;
 
-      const originalFilePath = `./uploaded/original/category_images/${imageName}`;
-      const thumbnailsFilePath = `./uploaded/thumbnails/category_images/${imageName}`;
+      const originalDir = './uploaded/original/category_images/';
+      const thumbnailDir = './uploaded/thumbnails/category_images/';
+      const originalFilePath = originalDir + imageName;
+      const thumbnailsFilePath = thumbnailDir + imageName;
+
+      // create the directories if they don't exist
+      if (!fs.existsSync(originalDir)) {
+        fs.mkdirSync(originalDir, { recursive: true });
+      }
+      if (!fs.existsSync(originalDir)) {
+        fs.mkdirSync(originalDir, { recursive: true });
+      }
 
       stream.pipe(fs.createWriteStream(originalFilePath));
       stream.pipe(transformer).pipe(fs.createWriteStream(thumbnailsFilePath));
