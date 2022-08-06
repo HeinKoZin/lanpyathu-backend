@@ -13,6 +13,9 @@ import { CreateCategoryWithImageInput } from './dto/create-category-with-image.i
 import { SetCategoryWithImageInput } from './dto/set-category.input';
 import { CategoryImageSharpPipe } from '@pipes/category-image-sharp.pipe';
 import { CategoryImageEntity } from './entities/category-images.entity';
+import { SetUpdatedCategoryWithImageInput } from './dto/set-updated-category.input';
+import { UpdateCategoryWithImageInput } from './dto/update-category-with-image.input';
+import { UpdateCategoryImageSharpPipe } from '@pipes/update-category-image-sharp.pipe';
 
 @Resolver(() => CategoryEntity)
 export class CategoriesResolver {
@@ -42,7 +45,12 @@ export class CategoriesResolver {
 
   @Mutation(() => CategoryEntity)
   updateCategory(
-    @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput,
+    @Args(
+      'updateCategoryInput',
+      { type: () => UpdateCategoryWithImageInput },
+      UpdateCategoryImageSharpPipe,
+    )
+    updateCategoryInput: SetUpdatedCategoryWithImageInput,
   ) {
     return this.categoriesService.update(
       updateCategoryInput.id,

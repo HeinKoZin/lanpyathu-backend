@@ -2,6 +2,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { SetCategoryWithImageInput } from './dto/set-category.input';
+import { SetUpdatedCategoryWithImageInput } from './dto/set-updated-category.input';
+import * as fs from 'fs';
 
 @Injectable()
 export class CategoriesService {
@@ -31,11 +33,27 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: string, updateCategoryInput: UpdateCategoryInput) {
+  async update(
+    id: string,
+    updateCategoryInput: SetUpdatedCategoryWithImageInput,
+  ) {
     const category = this.findOne(id);
     if (!category) {
       throw new Error('Category not found');
     } else {
+      if (updateCategoryInput.image) {
+        // update category image
+        // delete old image
+        const oldImage = (await category).image;
+
+        if (oldImage) {
+          // delete old image from uploads folder
+          const oldOriginalImagePath = `./uploaded/original/category_images/${oldImage}`;
+          const oldThumbnailImagePath = `./uploaded/thumbnails/category_images/${oldImage}`;
+          await this.deleteFile(oldOriginalImagePath);
+          await this.deleteFile(oldThumbnailImagePath);
+        }
+      }
       return await this.prismaService.category.update({
         where: {
           id,
@@ -68,4 +86,16 @@ export class CategoriesService {
   //   });
   //   return category;
   // }
+
+  async deleteFile(path: string) {
+    try {
+      await fs.unlink(path, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

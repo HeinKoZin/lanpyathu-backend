@@ -90,7 +90,7 @@ type Mutation {
   removeSayartaw(id: String!): SayartawEntity!
   removeTayartaw(id: String!): TayartawEntity!
   removeUser(id: Int!): UserEntity!
-  updateCategory(updateCategoryInput: UpdateCategoryInput!): CategoryEntity!
+  updateCategory(updateCategoryInput: UpdateCategoryWithImageInput!): CategoryEntity!
   updateSayartaw(updateSayartawInput: UpdateSayartawInput!): SayartawEntity!
   updateTayartaw(updateTayartawInput: UpdateTayartawInput!): TayartawEntity!
   updateUser(updateUserInput: UpdateUserInput!): UserEntity!
@@ -164,8 +164,9 @@ type TayartawEntity {
   updatedAt: String!
 }
 
-input UpdateCategoryInput {
+input UpdateCategoryWithImageInput {
   id: String!
+  image: Upload
   name: String
   parentId: String
 }
