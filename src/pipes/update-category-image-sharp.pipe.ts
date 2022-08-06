@@ -9,6 +9,7 @@ import { SetCategoryWithImageInput } from '@categories/dto/set-category.input';
 import ShortUniqueId from 'short-unique-id';
 import { UpdateCategoryWithImageInput } from '@categories/dto/update-category-with-image.input';
 import { SetUpdatedCategoryWithImageInput } from '@categories/dto/set-updated-category.input';
+import { S3 } from 'aws-sdk';
 
 @Injectable()
 export class UpdateCategoryImageSharpPipe
@@ -31,7 +32,7 @@ export class UpdateCategoryImageSharpPipe
       return rest;
     } else {
       try {
-        const { createReadStream, filename } =
+        const { createReadStream, filename, mimetype } =
           (await createCategoryInput?.image) as unknown as FileUpload;
 
         const stream = createReadStream();
@@ -53,6 +54,51 @@ export class UpdateCategoryImageSharpPipe
         const thumbnailDir = './uploaded/thumbnails/category_images/';
         const originalFilePath = originalDir + imageName;
         const thumbnailsFilePath = thumbnailDir + imageName;
+
+        // stream to buffer
+
+        const s3 = new S3({
+          accessKeyId: process.env.S3_ACCESS_KEY,
+          secretAccessKey: process.env.S3_SECRET_KEY,
+          endpoint: process.env.ENDPOINT,
+          s3ForcePathStyle: true,
+          signatureVersion: 'v4',
+        });
+
+        const bufferArray: any = [];
+
+        stream
+          .on('data', (chunk) => {
+            bufferArray.push(chunk);
+          })
+          .on('end', async () => {
+            const buffer = Buffer.concat(bufferArray);
+
+            const uploadResult = await s3
+              .upload({
+                ACL: 'public-read',
+                ContentType: mimetype,
+                ContentDisposition: 'inline',
+                Bucket: process.env.S3_BUCKET,
+                Body: buffer,
+                Key: imageName,
+              })
+              .promise();
+            console.log(uploadResult);
+
+            console.log(
+              s3.getSignedUrl('getObject', {
+                Bucket: 'lanpyathu',
+                Key: imageName,
+              }),
+            );
+          })
+          .on('error', (err) => {
+            console.log(err);
+          })
+          .on('finish', () => {
+            console.log('finished');
+          });
 
         // create the directories if they don't exist
         if (!fs.existsSync(originalDir)) {
