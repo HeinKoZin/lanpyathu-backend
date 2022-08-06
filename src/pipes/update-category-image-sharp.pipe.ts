@@ -50,8 +50,8 @@ export class UpdateCategoryImageSharpPipe
           .split('.')
           .pop()}`;
 
-        const originalDir = './uploaded/original/category_images/';
-        const thumbnailDir = './uploaded/thumbnails/category_images/';
+        const originalDir = 'uploaded/original/category_images/';
+        const thumbnailDir = 'uploaded/thumbnails/category_images/';
         const originalFilePath = originalDir + imageName;
         const thumbnailsFilePath = thumbnailDir + imageName;
 
@@ -73,25 +73,31 @@ export class UpdateCategoryImageSharpPipe
           })
           .on('end', async () => {
             const buffer = Buffer.concat(bufferArray);
+            const compressedImage = sharp(buffer)
+              .resize(800)
+              .webp({ quality: 60 });
 
-            const uploadResult = await s3
+            await s3
               .upload({
                 ACL: 'public-read',
                 ContentType: mimetype,
                 ContentDisposition: 'inline',
                 Bucket: process.env.S3_BUCKET,
                 Body: buffer,
-                Key: imageName,
+                Key: originalFilePath,
               })
               .promise();
-            console.log(uploadResult);
 
-            console.log(
-              s3.getSignedUrl('getObject', {
-                Bucket: 'lanpyathu',
-                Key: imageName,
-              }),
-            );
+            await s3
+              .upload({
+                ACL: 'public-read',
+                ContentType: mimetype,
+                ContentDisposition: 'inline',
+                Bucket: process.env.S3_BUCKET,
+                Body: compressedImage,
+                Key: thumbnailsFilePath,
+              })
+              .promise();
           })
           .on('error', (err) => {
             console.log(err);
