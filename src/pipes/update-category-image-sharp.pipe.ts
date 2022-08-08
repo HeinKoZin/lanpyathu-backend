@@ -4,7 +4,8 @@ import * as sharp from 'sharp';
 import ShortUniqueId from 'short-unique-id';
 import { UpdateCategoryWithImageInput } from '@categories/dto/update-category-with-image.input';
 import { SetUpdatedCategoryWithImageInput } from '@categories/dto/set-updated-category.input';
-import S3 from 'aws-sdk/clients/s3';
+import { S3Client } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 
 @Injectable()
 export class UpdateCategoryImageSharpPipe
@@ -32,13 +33,6 @@ export class UpdateCategoryImageSharpPipe
           (await createCategoryInput?.image) as unknown as FileUpload;
 
         const stream = createReadStream();
-        // const transformer = sharp()
-        //   .resize(800)
-        //   .webp({ quality: 70 })
-        //   .toFormat('webp')
-        //   .on('info', function (info) {
-        //     console.log('Image height is ' + info.height);
-        //   });
 
         // generate a random string for the file name
         // uuidv4 is a function that generates a random string
@@ -98,23 +92,44 @@ export class UpdateCategoryImageSharpPipe
     body: Buffer | sharp.Sharp,
     mimetype: string,
   ) => {
-    const s3 = new S3({
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_SECRET_KEY,
+    const client = new S3Client({
+      region: 'ap1',
       endpoint: process.env.ENDPOINT,
-      s3ForcePathStyle: true,
-      signatureVersion: 'v4',
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_KEY,
+      },
     });
 
-    await s3
-      .upload({
-        ACL: 'public-read',
-        ContentType: mimetype,
-        ContentDisposition: 'inline',
-        Bucket: process.env.S3_BUCKET,
-        Body: body,
-        Key: key,
-      })
-      .promise();
+    const params = {
+      ACL: 'public-read',
+      ContentType: mimetype,
+      ContentDisposition: 'inline',
+      Bucket: process.env.S3_BUCKET,
+      Body: body,
+      Key: key,
+    };
+
+    try {
+      const parallelUploads3 = new Upload({
+        client: client,
+        params: params,
+
+        tags: [
+          /*...*/
+        ], // optional tags
+        queueSize: 4, // optional concurrency configuration
+        partSize: 1024 * 1024 * 5, // optional size of each part, in bytes, at least 5MB
+        leavePartsOnError: false, // optional manually handle dropped parts
+      });
+
+      parallelUploads3.on('httpUploadProgress', (progress) => {
+        console.log(progress);
+      });
+
+      await parallelUploads3.done();
+    } catch (e) {
+      console.log(e);
+    }
   };
 }

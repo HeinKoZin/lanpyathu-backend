@@ -1,9 +1,13 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { UpdateCategoryInput } from './dto/update-category.input';
 import { SetCategoryWithImageInput } from './dto/set-category.input';
 import { SetUpdatedCategoryWithImageInput } from './dto/set-updated-category.input';
-import S3 from 'aws-sdk/clients/s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class CategoriesService {
@@ -21,16 +25,20 @@ export class CategoriesService {
   async findAll() {
     const allCategories = await this.prismaService.category.findMany();
 
-    allCategories.forEach(async (category) => {
-      const originalImage = (await category).originalImage;
-      const thumbnailImage = (await category).thumbnailImage;
-      if (originalImage && thumbnailImage) {
-        category.originalImage = this.getImageUrl(originalImage);
-        category.thumbnailImage = this.getImageUrl(thumbnailImage);
-      }
-    });
+    // all categories with image
+    const categoriesWithImage = await Promise.all(
+      allCategories.map(async (category) => {
+        const originalImage = await this.getImageUrl(category.originalImage);
+        const thumbnailImage = await this.getImageUrl(category.thumbnailImage);
+        return {
+          ...category,
+          originalImage,
+          thumbnailImage,
+        };
+      }),
+    );
 
-    return allCategories;
+    return categoriesWithImage;
   }
 
   async findOne(id: string) {
@@ -61,8 +69,6 @@ export class CategoriesService {
 
         if (oldOriginalImage && oldThumbnailImage) {
           // delete old image from uploads folder
-          // const oldOriginalImagePath = `./uploaded/original/category_images/${oldImage}`;
-          // const oldThumbnailImagePath = `./uploaded/thumbnails/category_images/${oldImage}`;
           await this.deleteFile(oldOriginalImage);
           await this.deleteFile(oldThumbnailImage);
         }
@@ -91,43 +97,35 @@ export class CategoriesService {
     }
   }
 
-  // async createWithImage(data: SetCategoryWithImageInput) {
-  //   const category = await this.prismaService.category.create({
-  //     data: {
-  //       ...data,
-  //     },
-  //   });
-  //   return category;
-  // }
-
   async deleteFile(path: string) {
     try {
-      const s3 = new S3({
+      const client = new S3Client({
+        region: 'ap1',
         endpoint: process.env.ENDPOINT,
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_KEY,
-        s3ForcePathStyle: true,
-        signatureVersion: 'v4',
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY,
+          secretAccessKey: process.env.S3_SECRET_KEY,
+        },
       });
-
       const params = {
         Bucket: process.env.S3_BUCKET,
         Key: path,
       };
 
-      await s3.deleteObject(params).promise();
+      await client.send(new DeleteObjectCommand(params));
     } catch (error) {
       console.log(error);
     }
   }
 
-  getImageUrl(path: string) {
-    const s3 = new S3({
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_SECRET_KEY,
+  async getImageUrl(path: string) {
+    const client = new S3Client({
+      region: 'ap1',
       endpoint: process.env.ENDPOINT,
-      s3ForcePathStyle: true,
-      signatureVersion: 'v4',
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_KEY,
+      },
     });
 
     const params = {
@@ -135,7 +133,7 @@ export class CategoriesService {
       Key: path,
     };
 
-    const url = s3.getSignedUrl('getObject', params);
+    const url = await getSignedUrl(client, new GetObjectCommand(params));
     return url;
   }
 }

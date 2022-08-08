@@ -4,7 +4,8 @@ import * as sharp from 'sharp';
 import { CreateCategoryWithImageInput } from '@categories/dto/create-category-with-image.input';
 import { SetCategoryWithImageInput } from '@categories/dto/set-category.input';
 import ShortUniqueId from 'short-unique-id';
-import S3 from 'aws-sdk/clients/s3';
+import { S3Client } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 
 @Injectable()
 export class CategoryImageSharpPipe
@@ -79,23 +80,44 @@ export class CategoryImageSharpPipe
     body: Buffer | sharp.Sharp,
     mimetype: string,
   ) => {
-    const s3 = new S3({
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_SECRET_KEY,
+    const client = new S3Client({
+      region: 'ap1',
       endpoint: process.env.ENDPOINT,
-      s3ForcePathStyle: true,
-      signatureVersion: 'v4',
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_KEY,
+      },
     });
 
-    await s3
-      .upload({
-        ACL: 'public-read',
-        ContentType: mimetype,
-        ContentDisposition: 'inline',
-        Bucket: process.env.S3_BUCKET,
-        Body: body,
-        Key: key,
-      })
-      .promise();
+    const params = {
+      Bucket: process.env.S3_BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: mimetype,
+      ACL: 'public-read',
+      ContentDisposition: 'inline',
+    };
+
+    try {
+      const parallelUploads3 = new Upload({
+        client: client,
+        params: params,
+
+        tags: [
+          /*...*/
+        ], // optional tags
+        queueSize: 4, // optional concurrency configuration
+        partSize: 1024 * 1024 * 5, // optional size of each part, in bytes, at least 5MB
+        leavePartsOnError: false, // optional manually handle dropped parts
+      });
+
+      parallelUploads3.on('httpUploadProgress', (progress) => {
+        console.log(progress);
+      });
+
+      await parallelUploads3.done();
+    } catch (e) {
+      console.log(e);
+    }
   };
 }

@@ -1,11 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Parent,
-  ResolveField,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CategoriesService } from './categories.service';
 import { CategoryEntity } from './entities/category.entity';
 import { CreateCategoryWithImageInput } from './dto/create-category-with-image.input';
