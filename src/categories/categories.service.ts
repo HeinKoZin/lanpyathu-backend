@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { SetCategoryWithImageInput } from './dto/set-category.input';
 import { SetUpdatedCategoryWithImageInput } from './dto/set-updated-category.input';
-import * as fs from 'fs';
-import { S3 } from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class CategoriesService {

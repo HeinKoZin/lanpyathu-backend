@@ -4,7 +4,7 @@ import * as sharp from 'sharp';
 import ShortUniqueId from 'short-unique-id';
 import { UpdateCategoryWithImageInput } from '@categories/dto/update-category-with-image.input';
 import { SetUpdatedCategoryWithImageInput } from '@categories/dto/set-updated-category.input';
-import { S3 } from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class UpdateCategoryImageSharpPipe
