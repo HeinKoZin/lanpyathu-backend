@@ -100,7 +100,8 @@ model Sayartaw {
 
 model Category {
   id               String             @id @default(cuid())
-  image            String
+  originalImage    String
+  thumbnailImage   String
   name             String
   parentId         String?
   createdAt        DateTime           @default(now())

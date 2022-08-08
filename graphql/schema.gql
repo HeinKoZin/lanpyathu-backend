@@ -5,15 +5,11 @@
 type CategoryEntity {
   createdAt: String!
   id: String!
-  image: CategoryImageEntity!
   name: String!
+  originalImage: String!
   parentId: String
+  thumbnailImage: String!
   updatedAt: String!
-}
-
-type CategoryImageEntity {
-  original: String!
-  thumbnail: String!
 }
 
 input CreateCategoryWithImageInput {
