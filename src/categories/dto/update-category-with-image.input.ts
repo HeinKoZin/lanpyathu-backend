@@ -6,7 +6,7 @@ import { CategoryEntity } from '../entities/category.entity';
 export class UpdateCategoryWithImageInput extends PartialType(
   OmitType(
     CategoryEntity,
-    ['id', 'image', 'createdAt', 'updatedAt'],
+    ['id', 'originalImage', 'thumbnailImage', 'createdAt', 'updatedAt'],
     InputType,
   ),
 ) {

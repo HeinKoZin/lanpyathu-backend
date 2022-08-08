@@ -40,7 +40,8 @@ Table sayartaws {
 
 Table categories {
   id String [pk]
-  image String [not null]
+  originalImage String [not null]
+  thumbnailImage String [not null]
   name String [not null]
   parentId String
   createdAt DateTime [default: `now()`, not null]

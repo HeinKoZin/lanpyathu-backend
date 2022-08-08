@@ -6,8 +6,11 @@ export class CategoryEntity implements Category {
   @Field(() => String)
   id: string;
 
-  @HideField()
-  image: string;
+  @Field(() => String)
+  originalImage: string;
+
+  @Field(() => String)
+  thumbnailImage: string;
 
   @Field(() => String)
   name: string;

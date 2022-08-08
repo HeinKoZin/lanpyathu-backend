@@ -8,11 +8,9 @@ import {
 } from '@nestjs/graphql';
 import { CategoriesService } from './categories.service';
 import { CategoryEntity } from './entities/category.entity';
-import { UpdateCategoryInput } from './dto/update-category.input';
 import { CreateCategoryWithImageInput } from './dto/create-category-with-image.input';
 import { SetCategoryWithImageInput } from './dto/set-category.input';
 import { CategoryImageSharpPipe } from '@pipes/category-image-sharp.pipe';
-import { CategoryImageEntity } from './entities/category-images.entity';
 import { SetUpdatedCategoryWithImageInput } from './dto/set-updated-category.input';
 import { UpdateCategoryWithImageInput } from './dto/update-category-with-image.input';
 import { UpdateCategoryImageSharpPipe } from '@pipes/update-category-image-sharp.pipe';
@@ -74,12 +72,4 @@ export class CategoriesResolver {
   // ) {
   //   return this.categoriesService.createWithImage(setCategory);
   // }
-
-  @ResolveField(() => CategoryImageEntity)
-  image(@Parent() CategoryEntity) {
-    return {
-      original: `${process.env.HOST}:${process.env.PORT}/uploaded/original/category_images/${CategoryEntity.image}`,
-      thumbnail: `${process.env.HOST}:${process.env.PORT}/uploaded/thumbnails/category_images/${CategoryEntity.image}`,
-    };
-  }
 }
