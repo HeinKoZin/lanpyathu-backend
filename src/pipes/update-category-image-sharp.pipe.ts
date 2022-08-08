@@ -1,12 +1,10 @@
 import { FileUpload } from 'graphql-upload';
 import { Injectable, PipeTransform } from '@nestjs/common';
-// import { Upload } from '@scalars/Upload.scalar';
-// import path from 'path';
 import * as sharp from 'sharp';
 import ShortUniqueId from 'short-unique-id';
 import { UpdateCategoryWithImageInput } from '@categories/dto/update-category-with-image.input';
 import { SetUpdatedCategoryWithImageInput } from '@categories/dto/set-updated-category.input';
-import { S3 } from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class UpdateCategoryImageSharpPipe
@@ -25,6 +23,7 @@ export class UpdateCategoryImageSharpPipe
   ): Promise<SetUpdatedCategoryWithImageInput> {
     // return JSON.stringify(data);
     if (!createCategoryInput.image) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image, ...rest } = createCategoryInput;
       return rest;
     } else {
@@ -47,20 +46,10 @@ export class UpdateCategoryImageSharpPipe
           .split('.')
           .pop()}`;
 
-        const originalDir = 'uploaded/original/category_images/';
-        const thumbnailDir = 'uploaded/thumbnails/category_images/';
-        const originalFilePath = originalDir + imageName;
-        const thumbnailsFilePath = thumbnailDir + imageName;
+        const originalFilePath = `uploaded/original/category_images/${imageName}`;
+        const thumbnailsFilePath = `uploaded/thumbnails/category_images/${imageName}`;
 
         // stream to buffer
-
-        const s3 = new S3({
-          accessKeyId: process.env.S3_ACCESS_KEY,
-          secretAccessKey: process.env.S3_SECRET_KEY,
-          endpoint: process.env.ENDPOINT,
-          s3ForcePathStyle: true,
-          signatureVersion: 'v4',
-        });
 
         const bufferArray: any = [];
 
@@ -81,28 +70,6 @@ export class UpdateCategoryImageSharpPipe
               compressedImage,
               mimetype,
             );
-
-            // await s3
-            //   .upload({
-            //     ACL: 'public-read',
-            //     ContentType: mimetype,
-            //     ContentDisposition: 'inline',
-            //     Bucket: process.env.S3_BUCKET,
-            //     Body: buffer,
-            //     Key: originalFilePath,
-            //   })
-            //   .promise();
-
-            // await s3
-            //   .upload({
-            //     ACL: 'public-read',
-            //     ContentType: mimetype,
-            //     ContentDisposition: 'inline',
-            //     Bucket: process.env.S3_BUCKET,
-            //     Body: compressedImage,
-            //     Key: thumbnailsFilePath,
-            //   })
-            //   .promise();
           })
           .on('error', (err) => {
             console.log(err);
@@ -111,18 +78,7 @@ export class UpdateCategoryImageSharpPipe
             console.log('finished');
           });
 
-        // // create the directories if they don't exist
-        // if (!fs.existsSync(originalDir)) {
-        //   console.log('originalDir does not exist');
-        //   await fs.mkdirSync(originalDir, { recursive: true });
-        // }
-        // if (!fs.existsSync(thumbnailDir)) {
-        //   await fs.mkdirSync(thumbnailDir, { recursive: true });
-        // }
-
-        // stream.pipe(fs.createWriteStream(originalFilePath));
-        // stream.pipe(transformer).pipe(fs.createWriteStream(thumbnailsFilePath));
-
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { image, ...setData } = createCategoryInput;
 
         return {

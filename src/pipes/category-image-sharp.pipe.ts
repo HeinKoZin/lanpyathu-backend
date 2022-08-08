@@ -1,13 +1,10 @@
 import { FileUpload } from 'graphql-upload';
 import { Injectable, PipeTransform } from '@nestjs/common';
-// import { Upload } from '@scalars/Upload.scalar';
-// import path from 'path';
 import * as sharp from 'sharp';
-import * as fs from 'fs';
 import { CreateCategoryWithImageInput } from '@categories/dto/create-category-with-image.input';
 import { SetCategoryWithImageInput } from '@categories/dto/set-category.input';
 import ShortUniqueId from 'short-unique-id';
-import { S3 } from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class CategoryImageSharpPipe
@@ -37,10 +34,8 @@ export class CategoryImageSharpPipe
         .split('.')
         .pop()}`;
 
-      const originalDir = 'uploaded/original/category_images/';
-      const thumbnailDir = 'uploaded/thumbnails/category_images/';
-      const originalFilePath = originalDir + imageName;
-      const thumbnailsFilePath = thumbnailDir + imageName;
+      const originalFilePath = `uploaded/original/category_images/${imageName}`;
+      const thumbnailsFilePath = `uploaded/thumbnails/category_images/${imageName}`;
 
       const bufferArray: any = [];
 
@@ -65,6 +60,7 @@ export class CategoryImageSharpPipe
           console.log('finished');
         });
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image, ...setData } = createCategoryInput;
 
       return {
